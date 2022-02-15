@@ -22,10 +22,11 @@ namespace _03.ByteBank
             };
 
             int opcao = -1;
-            while (opcao != 0)
+
+            do
             {
                 opcao = GerarMenu(itensMenu);
-            }
+            } while (opcao != 0);
         }
 
         private static int GerarMenu(ItemMenu[] itensMenu)

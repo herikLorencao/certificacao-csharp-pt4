@@ -13,11 +13,10 @@ namespace _03.ByteBank
             {
                 //imprime cabeçalho
                 Console.WriteLine("id,nome,sobrenome,email,valor,status");
-
-                //lê primeira linha de dados
-                string linha = leitor.ReadLine();
+                string linha;
                 //verifica fim de arquivo
-                if (linha != null)
+
+                while((linha = leitor.ReadLine()) != null)
                 {
                     //imprime a linha do cliente
                     var campos = linha.Split(',');
