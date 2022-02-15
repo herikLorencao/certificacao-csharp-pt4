@@ -9,17 +9,27 @@ namespace _04.ByteBank
     {
         static void Main(string[] args)
         {
-            GetFatorial(5);
-            GetFatorial(4);
-            GetFatorial(3);
-            GetFatorial(2);
-            GetFatorial(1);
-            GetFatorial(0);
+            // GetFatorial(5);
+            // GetFatorial(4);
+            // GetFatorial(3);
+            // GetFatorial(2);
+            // GetFatorial(1);
+            // GetFatorial(0);
 
             //RelatorioClientes.ImprimirListagemClientes();
 
             //MenuCaixaEletronico menu = new MenuCaixaEletronico();
             //menu.Executar();
+
+            // var contasEspeciais = GetContasEspeciais();
+            //
+            // foreach (var conta in contasEspeciais)
+            // {
+            //     Console.WriteLine(conta.ToString());
+            // }
+
+            var resultado = ExisteContaComMaisDe50000();
+            Console.WriteLine(resultado);
         }
 
 
@@ -28,8 +38,14 @@ namespace _04.ByteBank
             IList<Cliente> clientes = GetClientes();
             IList<Conta> contasEspeciais = new Collection<Conta>();
 
-            //TAREFA: RETORNAR UMA LISTA COM 
-            //TODAS AS CONTAS COM MAIS DE 5 MIL DE SALDO
+            foreach (var cliente in clientes)
+            {
+                foreach (var conta in cliente.Contas)
+                {
+                    if (conta.Saldo > 5000)
+                        contasEspeciais.Add(conta);
+                }
+            }
 
             return contasEspeciais;
         }
@@ -41,6 +57,15 @@ namespace _04.ByteBank
             //TAREFA: RETORNAR VERDADEIRO OU FALSO
             //INDICANDO SE EXISTE CONTA COM MAIS DE 50 MIL DE SALDO
 
+            foreach (var cliente in clientes)
+            {
+                foreach (var conta in cliente.Contas)
+                {
+                    if (conta.Saldo > 50000)
+                        return true;
+                }
+            }
+            
             return false;
         }
 
@@ -76,13 +101,12 @@ namespace _04.ByteBank
             //FATORIAL DE 0                      = 1 
 
             int fatorial = 1;
-            int fator = numero;
 
-            while (fator >= 1)
+            for (int fator = numero; fator >= 1; fator--)
             {
                 fatorial = fatorial * fator;
-                fator = fator - 1;
             }
+            
             System.Console.WriteLine($"fatorial de {numero} é {fatorial}");
 
             return fatorial;
