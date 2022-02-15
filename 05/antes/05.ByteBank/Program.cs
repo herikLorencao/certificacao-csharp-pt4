@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Runtime.Serialization;
 
 namespace _05.ByteBank
 {
@@ -10,6 +11,27 @@ namespace _05.ByteBank
     {
         static void Main(string[] args)
         {
+            var conta1 = new ContaCorrente(1, 100);
+            var conta2 = new ContaCorrente(4, 50);
+            Console.WriteLine(conta1);
+            Console.WriteLine(conta2);
+
+            ITransferenciaBancaria transferencia = new TransferenciaBancaria();
+            transferencia.Efetuar(conta1, conta2, 30);
+
+            Console.WriteLine(conta1);
+            Console.WriteLine(conta2);
+
+            try
+            {
+                transferencia.Efetuar(conta1, null, 50);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Aconteceu um problema na transferência");
+                Logger.LogErro(e.ToString());
+            }
+            
             Console.ReadKey();
         }
     }
@@ -64,6 +86,18 @@ namespace _05.ByteBank
             , decimal valor)
         {
             Logger.LogInfo("Entrando do método Efetuar.");
+
+            if (contaDebito == null)
+                throw new ArgumentNullException("contaDebito");
+
+            if (contaCredito == null)
+                throw new ArgumentNullException("contaCredito");
+
+            if (valor <= 0)
+                throw new ArgumentOutOfRangeException("valor");
+
+            if (valor > contaDebito.Saldo)
+                throw new SaldoContaInsuficienteException();
 
             contaDebito.Debitar(valor);
             contaCredito.Creditar(valor);
@@ -153,6 +187,30 @@ namespace _05.ByteBank
             {
                 sw.WriteLine(DateTime.Now.ToLocalTime() + ": " + tipo + " - " + mensagem);
             }
+        }
+    }
+
+    [Serializable]
+    class SaldoContaInsuficienteException : Exception
+    {
+        public override string Message { get; } = "Conta com valor insuficiente para operação";
+
+        public SaldoContaInsuficienteException()
+        {
+        }
+
+        public SaldoContaInsuficienteException(string message) : base(message)
+        {
+        }
+
+        public SaldoContaInsuficienteException(string message, Exception inner) : base(message, inner)
+        {
+        }
+
+        protected SaldoContaInsuficienteException(
+            SerializationInfo info,
+            StreamingContext context) : base(info, context)
+        {
         }
     }
 }
